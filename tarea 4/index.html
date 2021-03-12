@@ -46,8 +46,15 @@
 <body>
     <div id="menub">
         <button id="b_piramide">Piramide</button>
-        <button id="b_b">Bonds</button>
-        <button id="b_ab">Atoms + Bonds</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
+        <button id="b_b">obj</button>
     </div>
 
     <script type="module">
@@ -83,7 +90,8 @@
             // MODELS
             let geometry = new THREE.PlaneGeometry( 15, 15, 50 );
             let material = new THREE.MeshBasicMaterial({color: "purple", wireframe: true,side: THREE.DoubleSide, opacity: 0.5,
-            transparent: true});
+            transparent: true,
+            visible:false});
             
             mesh1 = meshs(geometry, material,"plano");
             mesh1.rotation.x = 90 * Math.PI / 180;
@@ -167,6 +175,32 @@
             mesh.name = "piramide";
             return mesh;
         }
+        function piramide1() {
+            var pts = [
+                new THREE.Vector3(0.5, 0.5, 0.5),
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, 1),
+                new THREE.Vector3(1, 0, 1),
+                new THREE.Vector3(1, 0, 0),
+            ];
+            let geometry =  new THREE.BufferGeometry().setFromPoints(pts);
+            geometry.setIndex([
+                0, 1, 2,
+                0, 2, 3, 
+                0, 3, 4,
+                0, 4, 1,
+                1, 3, 2,
+                1, 4, 3,
+
+            ]);
+
+            geometry.computeVertexNormals();
+            let material = new THREE.MeshBasicMaterial({color: "purple", wireframe: true, opacity: 0.5,
+            transparent: true});
+            let mesh = new THREE.Mesh(geometry, material);
+            mesh.name = "piramide";
+            return mesh;
+        }
         
         function meshs(geometry3, material3, name) {
             let creaMesh = new THREE.Mesh(geometry3, material3);
@@ -220,7 +254,8 @@
 
             const parameters = {
                 colorPalette: [1, 1, 1],
-                opacity: 0.50
+                opacity: 0.50,
+                visible:false,
             };
             let fondo=generalMenu.addColor( parameters, "colorPalette").name("Fondo").listen().onChange(function(color) {
                 renderer.setClearColor(new THREE.Color(color[0]/255, color[1]/255, color[2]/255));
@@ -228,6 +263,9 @@
             // Appearance Menu
             let appearMenu = objMenu.addFolder("Plano Appearance Menu");
             let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe").onChange(function(value) {
+
+            });
+            let visible = appearMenu.add(mesh.material, "visible").setValue(true).name("visible").onChange(function(value) {
 
             });
             let listColors = appearMenu.add(model, "defaultItem", model.listColors).name("Color List").onChange(function(item) {
