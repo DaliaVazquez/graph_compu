@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        }
+        #menub {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        button {
+            color: rgb(255,255,255);
+            background: rgb(255,255,255,0.1);
+            border: 0px;
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0,255,255,0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0,255,255,1);
+        }
+
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div id="menub">
+        <button id="b_piramide">Piramide</button>
+        <button id="b_b">Bonds</button>
+        <button id="b_ab">Atoms + Bonds</button>
+    </div>
+
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three/build/three.module.js";
+        import {OrbitControls} from "https://unpkg.com/three/examples/jsm/controls/OrbitControls.js";
+        import Stats from "https://unpkg.com/three/examples/jsm/libs/stats.module.js";
+        import dat from 'https://unpkg.com/three/examples/jsm/libs/dat.gui.module.js';
+
+        "use strict";
+
+        let renderer, scene, camera, cameraControls, mesh, mesh1, mesh2, mesh3,mesh4, stats, gui, num_fig;
+
+        function init() {
+            // RENDERER ENGINE
+            renderer = new THREE.WebGLRenderer({antialias: true});
+            renderer.setClearColor(new THREE.Color(0, 0, 0,));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            num_fig=0;
+
+            // SCENE
+            scene = new THREE.Scene();
+            createMenub()
+            // CAMERA
+            let fov = 60;
+            let aspect = window.innerWidth / window.innerHeight;
+            let near = 0.1;
+            let far = 10000;
+            camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            camera.position.set(0, 0, 5);
+            cameraControls = new OrbitControls(camera, renderer.domElement);
+
+            // MODELS
+            let geometry = new THREE.PlaneGeometry( 15, 15, 50 );
+            let material = new THREE.MeshBasicMaterial({color: "purple", wireframe: true,side: THREE.DoubleSide, opacity: 0.5,
+            transparent: true});
+            
+            mesh1 = meshs(geometry, material,"plano");
+            mesh1.rotation.x = 90 * Math.PI / 180;
+
+            // SCENE GRAPH
+            scene.add(mesh1);
+
+            // GUI
+            gui = new dat.GUI();
+
+            // model
+            let model1 = modelos(mesh1);
+            
+            // objet Menu
+            let CubelMenu = gui.addFolder("General Menu");
+            menu_general(CubelMenu,mesh1,model1);
+
+            //rotMenu.open();
+            gui.close()
+            
+            // STATS
+            stats = new Stats();
+            stats.showPanel(0); // FPS
+            document.body.appendChild(stats.dom);
+
+            // ANIMATION
+            renderLoop();
+        }
+
+        function renderLoop() {
+            stats.begin();
+            renderer.render(scene, camera); // DRAW SCENE
+            updateScene();
+            stats.end();
+            stats.update();
+            requestAnimationFrame(renderLoop);
+        }
+
+        function updateScene() {
+            //mesh.rotation.y = mesh.rotation.y + 1 * Math.PI / 180;
+        }
+        function createMenub() {
+            const b_piramide = document.getElementById( "b_piramide" );
+
+            b_piramide.addEventListener( 'click', function () {
+                num_fig++;
+                crea(piramide(), ": piramide");
+            } );
+
+        }
+        function crea(figura, nombre) {
+            let meshfig=figura;
+            scene.add(meshfig);
+            let modelfig = modelos(meshfig);
+            let figMenu = gui.addFolder("figura num "+num_fig+nombre);
+            menu(figMenu,meshfig,modelfig);
+        }
+        function piramide() {
+            var pts = [
+                new THREE.Vector3(0.5, 0.5, 0.5),
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, 1),
+                new THREE.Vector3(1, 0, 1),
+                new THREE.Vector3(1, 0, 0),
+            ];
+            let geometry =  new THREE.BufferGeometry().setFromPoints(pts);
+            geometry.setIndex([
+                0, 1, 2,
+                0, 2, 3, 
+                0, 3, 4,
+                0, 4, 1,
+                1, 3, 2,
+                1, 4, 3,
+
+            ]);
+
+            geometry.computeVertexNormals();
+            let material = new THREE.MeshBasicMaterial({color: "purple", wireframe: true, opacity: 0.5,
+            transparent: true});
+            let mesh = new THREE.Mesh(geometry, material);
+            mesh.name = "piramide";
+            return mesh;
+        }
+        
+        function meshs(geometry3, material3, name) {
+            let creaMesh = new THREE.Mesh(geometry3, material3);
+            creaMesh.name = name;
+            return creaMesh;
+        }
+
+        function modelos(mesh) {
+            let model = {
+                rotY: mesh.rotation.y * Math.PI / 180,
+                rotX: mesh.rotation.x * Math.PI / 180,
+                rotZ: mesh.rotation.z * Math.PI / 180,
+                posHomeX: function() {
+                    mesh.position.x = 0;
+                },
+                posHomeY: function() {
+                    mesh.position.y = 0;
+                },
+                posHomeZ: function() {
+                    mesh.position.z = 0;
+                },
+                rotHomeY: function() {
+                    model.rotY = 0;
+                    mesh.rotation.y = 0;
+                },
+                rotHomeX: function() {
+                    model.rotX = 0;
+                    mesh.rotation.x = 0;
+                },
+                rotHomeZ: function() {
+                    model.rotZ = 0;
+                    mesh.rotation.z = 0;
+                },
+                
+                listColors: ["White", "Red", "Yellow"],
+                defaultItem: "White",
+                colorPalette: [1, 1, 1],
+                opacity: 0.5,
+               
+            }
+            return model;
+        }
+        function menu_general(objMenu,mesh,model) {// General Info Menu
+            let generalMenu = objMenu.addFolder("General Info Menu");
+            let txfMeshName = generalMenu.add(mesh, "name").name("Model's Name")
+            .onChange(function(event) {
+
+            }).onFinishChange(function(event) {
+
+            });
+
+            const parameters = {
+                colorPalette: [1, 1, 1],
+                opacity: 0.50
+            };
+            let fondo=generalMenu.addColor( parameters, "colorPalette").name("Fondo").listen().onChange(function(color) {
+                renderer.setClearColor(new THREE.Color(color[0]/255, color[1]/255, color[2]/255));
+            });
+            // Appearance Menu
+            let appearMenu = objMenu.addFolder("Plano Appearance Menu");
+            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe").onChange(function(value) {
+
+            });
+            let listColors = appearMenu.add(model, "defaultItem", model.listColors).name("Color List").onChange(function(item) {
+                mesh.material.color = new THREE.Color(model.defaultItem.toLowerCase());
+                model.colorPalette = [mesh.material.color.r * 255, mesh.material.color.g * 255, mesh.material.color.b * 255];
+            });
+
+            let transparencia=appearMenu.add( parameters, "opacity", 0, 1, 0.01 ).name("transparencia").onChange(function() {
+                mesh.material.opacity = parameters.opacity;
+            });
+
+            let colorPalette = appearMenu.addColor(model, "colorPalette").name("Color Palette").listen().onChange(function(color) {
+                mesh.material.color = new THREE.Color(color[0]/255, color[1]/255, color[2]/255);
+            });
+            
+        }
+        function menu(objMenu,mesh,model) {// General Info Menu
+            let generalMenu = objMenu.addFolder("General Info Menu");
+            let txfMeshName = generalMenu.add(mesh, "name").name("Model's Name")
+            .onChange(function(event) {
+
+            }).onFinishChange(function(event) {
+
+            });
+            
+            // Position Menu
+            let positionMenu = objMenu.addFolder("Model's Position Menu");
+            let sliderPosX = positionMenu.add(mesh.position, "x").min(-5).max(5).step(0.5).setValue(0).name("X").listen().onChange(function(value) {
+            
+            });
+            let btnPosHomeX = positionMenu.add(model, "posHomeX").name("HOME").onChange(function(event) {
+
+            });
+            let sliderPosY = positionMenu.add(mesh.position, "y").min(-5).max(5).step(0.5).setValue(0).name("Y").listen().onChange(function(value) {
+            
+            });
+            let btnPosHomeY = positionMenu.add(model, "posHomeY").name("HOME").onChange(function(event) {
+
+            });
+            let sliderPosZ = positionMenu.add(mesh.position, "z").min(-5).max(5).step(0.5).setValue(0).name("Z").listen().onChange(function(value) {
+            
+            });
+            let btnPosHomeZ = positionMenu.add(model, "posHomeZ").name("HOME").onChange(function(event) {
+
+            });
+            // Orientation Menu
+            let rotMenu = objMenu.addFolder("Model's Rotation Menu");
+            let sliderRotY = rotMenu.add(model, "rotY").min(-180).max(180).step(10).setValue(0).name("Y (deg)").listen().onChange(function(value) {
+                mesh.rotation.y = model.rotY * Math.PI / 180;
+            });;
+            let btnRotHomeY = rotMenu.add(model, "rotHomeY").name("HOME").onChange(function(event) {
+
+            });
+
+            let sliderRotX = rotMenu.add(model, "rotX").min(-180).max(180).step(10).setValue(0).name("X (deg)").listen().onChange(function(value) {
+                mesh.rotation.x = model.rotX * Math.PI / 180;
+            });;
+            let btnRotHomeX = rotMenu.add(model, "rotHomeX").name("HOME").onChange(function(event) {
+
+            });
+
+            let sliderRotZ = rotMenu.add(model, "rotZ").min(-180).max(180).step(10).setValue(0).name("Z (deg)").listen().onChange(function(value) {
+                mesh.rotation.z = model.rotZ * Math.PI / 180;
+            });;
+
+            let btnRotHomeZ = rotMenu.add(model, "rotHomeZ").name("HOME").onChange(function(event) {
+
+            });
+            
+
+            // Appearance Menu
+            let appearMenu = objMenu.addFolder("Model's Appearance Menu");
+            let chbWireframe = appearMenu.add(mesh.material, "wireframe").setValue(true).name("Wireframe").onChange(function(value) {
+
+            });
+            let listColors = appearMenu.add(model, "defaultItem", model.listColors).name("Color List").onChange(function(item) {
+                mesh.material.color = new THREE.Color(model.defaultItem.toLowerCase());
+                model.colorPalette = [mesh.material.color.r * 255, mesh.material.color.g * 255, mesh.material.color.b * 255];
+            });
+            const parameters = {
+                opacity: 0.50
+            };
+
+            let transparencia=appearMenu.add( parameters, "opacity", 0, 1, 0.01 ).name("transparencia").onChange(function() {
+                mesh.material.opacity = parameters.opacity;
+            });
+            let colorPalette = appearMenu.addColor(model, "colorPalette").name("Color Palette").listen().onChange(function(color) {
+                mesh.material.color = new THREE.Color(color[0]/255, color[1]/255, color[2]/255);
+            });
+
+            
+        }
+
+        // EVENT LISTENERS & HANDLERS
+        document.addEventListener("DOMContentLoaded", init);
+
+        window.addEventListener("resize", function() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+    
+    
+</body>
+</html>

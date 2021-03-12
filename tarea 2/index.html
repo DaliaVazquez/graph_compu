@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        }
+    </style>
+    <title>Document</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three/build/three.module.js";
+        import {OrbitControls} from "https://unpkg.com/three/examples/jsm/controls/OrbitControls.js";
+        import Stats from "https://unpkg.com/three/examples/jsm/libs/stats.module.js";
+
+        "use strict";
+
+        let renderer, scene, camera, cameraControls, mesh, stats;
+
+        function init() {
+            // RENDERER ENGINE
+            renderer = new THREE.WebGLRenderer({antialias: true});
+            //renderer.setClearColor(new THREE.Color(1, 1, 1,));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // SCENE
+            scene = new THREE.Scene();
+
+            // CAMERA
+            let fov = 60;
+            let aspect = window.innerWidth / window.innerHeight;
+            let near = 0.1;
+            let far = 10000;
+            camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            camera.position.set(0, 0, 3);
+            cameraControls = new OrbitControls(camera, renderer.domElement);
+
+            // MODELS
+            var pts = [
+                new THREE.Vector3(0.5, 0.5, 0.5),
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, 1),
+                new THREE.Vector3(1, 0, 1),
+                new THREE.Vector3(1, 0, 0)
+            ];
+            let geometry =  new THREE.BufferGeometry().setFromPoints(pts);
+            geometry.setIndex([
+                0, 1, 2,
+                0, 2, 3, 
+                0, 3, 4,
+                0, 4, 1,
+                1, 3, 2,
+                1, 4, 3
+            ]);
+
+            geometry.computeVertexNormals();
+            let material = new THREE.MeshBasicMaterial({color: "purple", wireframe: true});
+            mesh = new THREE.Mesh(geometry, material);
+
+            // SCENE GRAPH
+            scene.add(mesh);
+            
+            // STATS
+            stats = new Stats();
+            stats.showPanel(0); // FPS
+            document.body.appendChild(stats.dom);
+
+            // ANIMATION
+            renderLoop();
+        }
+
+        function renderLoop() {
+            stats.begin();
+            renderer.render(scene, camera); // DRAW SCENE
+            updateScene();
+            stats.end();
+            stats.update();
+            requestAnimationFrame(renderLoop);
+        }
+
+        function updateScene() {
+            //mesh.rotation.y = mesh.rotation.y + 1 * Math.PI / 180;
+        }
+
+        // EVENT LISTENERS & HANDLERS
+        document.addEventListener("DOMContentLoaded", init);
+
+        window.addEventListener("resize", function() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
