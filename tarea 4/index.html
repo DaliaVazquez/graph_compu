@@ -88,7 +88,7 @@
             cameraControls = new OrbitControls(camera, renderer.domElement);
 
             // MODELS
-            let geometry = new THREE.PlaneGeometry( 15, 15, 10 );
+            let geometry = new THREE.PlaneGeometry( 15, 15, 10,10 );
             let material = new THREE.MeshBasicMaterial({color: "purple", wireframe: true,side: THREE.DoubleSide, opacity: 0.5,
             transparent: true,
             visible:false});
@@ -155,7 +155,7 @@
             } );
             b_espejo.addEventListener( 'click', function () {
                 num_fig++;
-                crea(espejo(), ": espejo");
+                crea(espejo(), ": silla");
             } );
             
             b_casita.addEventListener( 'click', function () {
@@ -590,7 +590,7 @@
             let material =  new THREE.MeshBasicMaterial({color: "rgb(129, 255, 51)", wireframe: true, opacity: 0.5,
             transparent: true});
             let mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "espejo";
+            mesh.name = "silla";
             return mesh;
         }
         
