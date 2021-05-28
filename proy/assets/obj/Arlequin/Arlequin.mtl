@@ -1,0 +1,75 @@
+newmtl _default_
+Kd 0.502 0.502 0.502 
+Ks 0.067 0.067 0.067 
+Ns 30
+
+newmtl track_mat_L_skinned_680
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/AMR_35_SH_track_AM.jpg
+map_bump textures/AMR_35_SH_track_Normal.jpg
+map_d textures/AMR_35_SH_track_Alpha.png
+map_metalness textures/AMR_35_SH_track_Metalness.jpg
+map_roughness textures/AMR_35_SH_track_Roughness.jpg
+
+newmtl tank_chassis_01_skinned_681
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/AMC_35_SH_chassis_01_AM.jpg
+map_bump textures/AMC_35_SH_chassis_01_Normal.jpg
+map_Ao textures/AMC_35_SH_chassis_01_AO.jpg
+map_metalness textures/AMC_35_SH_chassis_01_Metalness.jpg
+map_roughness textures/AMC_35_SH_chassis_01_Roughness.jpg
+
+newmtl tank_turret_01_756
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/AMC_35_SH_turret_01_AM.jpg
+map_bump textures/AMC_35_SH_turret_01_Normal.jpg
+map_Ao textures/AMC_35_SH_turret_01_AO.jpg
+map_metalness textures/AMC_35_SH_turret_01_Metalness.jpg
+map_roughness textures/AMC_35_SH_turret_01_Roughness.jpg
+
+newmtl tank_guns_skinned_798
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/AMC_35_SH_guns_AM.jpg
+map_bump textures/AMC_35_SH_guns_Normal.jpg
+map_Ao textures/AMC_35_SH_guns_AO.jpg
+map_metalness textures/AMC_35_SH_guns_Metalness.jpg
+map_roughness textures/AMC_35_SH_guns_Roughness.jpg
+
+newmtl tank_antenna_01_skinned_798
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/SH_radar_AM.jpg
+map_bump textures/SH_radar_Normal.jpg
+map_Ao textures/SH_radar_AO.jpg
+map_metalness textures/SH_radar_Metalness.jpg
+map_roughness textures/SH_radar_Roughness.jpg
+
+newmtl tank_hull_01_171
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/AMC_35_SH_hull_01_AM.jpg
+map_bump textures/AMC_35_SH_hull_01_Normal.jpg
+map_Ao textures/AMC_35_SH_hull_01_AO.jpg
+map_metalness textures/AMC_35_SH_hull_01_Metalness.jpg
+map_roughness textures/AMC_35_SH_hull_01_Roughness.jpg
+
+newmtl tank_equipment_01_171
+Kd 0.502 0.502 0.502 
+Ks 0.25 0.25 0.25 
+Ns 30
+map_Kd textures/AMC_35_SH_equipment_AM.jpg
+map_bump textures/AMC_35_SH_equipment_Normal.jpg
+map_Ao textures/AMC_35_SH_equipment_AO.jpg
+map_metalness textures/AMC_35_SH_equipment_Metalness.jpg
+map_roughness textures/AMC_35_SH_equipment_Roughness.jpg
+

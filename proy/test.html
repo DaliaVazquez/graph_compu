@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <script type="module" src="/js/test.js"></script>
+    <div id="gui"></div>
+    <div id="menub">
+        <button id="b_piramide">Piramide</button>
+        <button id="b_diamante">diamante</button>
+        <button id="b_espejo">silla</button>
+        <button id="b_casita">casita</button>
+        <button id="b_trapecio">trapecio</button>
+        <button id="b_corazon">corazon</button>
+        <button id="b_zorro">zorro</button>
+        <button id="b_mesa">mesa</button>
+        <button id="b_arcade">arcade</button>
+        <button id="b_estrella">estrella</button>
+    </div>
+    <script type="x-shader/x-vertex" id="vertexshader">
+
+        varying vec2 vUv;
+
+        void main() {
+
+            vUv = uv;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+        }
+
+    </script>
+
+    <script type="x-shader/x-fragment" id="fragmentshader">
+
+        uniform sampler2D baseTexture;
+        uniform sampler2D bloomTexture;
+
+        varying vec2 vUv;
+
+        void main() {
+
+            gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
+
+        }
+
+    </script>
+</body>
+</html>
